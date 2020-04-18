@@ -17,7 +17,8 @@ class Task:
         :param name: name of task
         :param start: start time for task
         :param finish: finish time for task
-        :param task_id: unique identification of task, default - hash of current time
+        :param task_id: unique identification of task, default -
+        hash of current time
         """
         self.task_id = task_id
         self.name = name
@@ -26,18 +27,21 @@ class Task:
 
     def __str__(self):
         return "{task_id : " + str(self.task_id) + ", name : " + self.name + \
-                   ", start : " + self.start.isoformat() + ", finish : " + self.finish.isoformat() + "}"
+                   ", start : " + self.start.isoformat() + ", finish : " + \
+                   self.finish.isoformat() + "}"
 
     def get_list(self):
         """
         Util function for storing Task class in database
         :return: list with params for insertion in database
         """
-        return [str(self.task_id), self.name, self.start.isoformat(), self.finish.isoformat()]
+        return [str(self.task_id), self.name, self.start.isoformat(),
+                self.finish.isoformat()]
 
     def get_dict(self):
         """
         Util function for visualize Task in ListView
         :return:dict with params for insert in ListView (without id)
         """
-        return {"name" : self.name, "start" : self.start, "finish" : self.finish}
+        return {"name" : self.name, "start" : self.start,
+                "finish" : self.finish}

@@ -55,7 +55,8 @@ class TasksModel(QtCore.QAbstractListModel):
         Util function for LisView representation
         :return: dict with current model roles
         """
-        return {TasksModel.nameRole: b"name", TasksModel.startRole: b"start", TasksModel.finishRole: b"finish"}
+        return {TasksModel.nameRole: b"name", TasksModel.startRole: b"start",
+                TasksModel.finishRole: b"finish"}
 
     @QtCore.Slot(int)
     def get(self, row):
@@ -73,7 +74,8 @@ class TasksModel(QtCore.QAbstractListModel):
         Update tasks values from database
         :return:
         """
-        self.tasks = self.__database.get_task(day=datetime.now().strftime("%Y-%m-%d"))
+        self.tasks = \
+            self.__database.get_task(day=datetime.now().strftime("%Y-%m-%d"))
         self.dataChanged.emit(self.__index, self.__index)
 
     def simplify(self, time):

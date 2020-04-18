@@ -23,7 +23,8 @@ class Render:
         self.__tasks_mode = TasksModel(self.__database)
 
         self.__engine = QQmlApplicationEngine()
-        self.__engine.rootContext().setContextProperty("tasksmodel", self.__tasks_mode)
+        self.__engine.rootContext().setContextProperty("tasksmodel",
+                                                       self.__tasks_mode)
         self.__engine.load("../../resources/layout/main.qml")
         self.__engine.quit.connect(self.__app.quit)
 

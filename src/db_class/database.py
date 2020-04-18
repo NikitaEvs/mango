@@ -109,7 +109,8 @@ class Database:
         :return: list of Task
         """
         self.__cursor.execute("""
-                            SELECT * FROM tasks WHERE start BETWEEN DATETIME(?, 'start of day') 
+                            SELECT * FROM tasks WHERE start 
+                            BETWEEN DATETIME(?, 'start of day') 
                             AND DATETIME(?, '+1 day', 'start of day')
                             """, [day, day])
 
