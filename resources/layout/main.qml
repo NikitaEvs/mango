@@ -156,7 +156,10 @@ ApplicationWindow {
 
                     ListView {
                         id: dayList
-                        anchors.fill: parent
+                        anchors.top: todayPanel.bottom
+                        width: parent.width
+                        height: parent.height - Screen.height / 5
+                        maximumFlickVelocity : Screen.height
                         clip: true
 
                         model: tasksmodel
@@ -166,8 +169,10 @@ ApplicationWindow {
                             color: Material.background
                             Pane {
                                 id: taskcard
-                                width: parent.width
+                                width: parent.width * 0.95
                                 height: Screen.height / 10
+
+                                anchors.centerIn: parent
 
                                 Material.elevation: 3
                                 Material.background: Light.background
@@ -179,38 +184,83 @@ ApplicationWindow {
 
                                     Rectangle {
                                         height: taskcard.height
-                                        width: applicationWindow.width / 3
+                                        width: taskcard.width / 3
                                         color: Light.background
 
                                         Label {
-                                            anchors.centerIn: parent
-                                            text: model.start
-                                        }
-                                    }
-
-                                    Rectangle {
-                                        height: taskcard.height
-                                        width: applicationWindow.width / 3
-                                        color: Light.background
-
-                                        Label {
-                                            anchors.centerIn: parent
+                                            anchors.verticalCenter: parent.verticalCenter
                                             text: model.name
+                                            font.family: String.font
+                                            font.bold: true
+                                            font.pointSize: 16
                                         }
                                     }
 
                                     Rectangle {
                                         height: taskcard.height
-                                        width: applicationWindow.width / 3
+                                        width: taskcard.width / 4
+                                        color: Light.background
+                                    }
+
+                                    Rectangle {
+                                        height: taskcard.height
+                                        width: taskcard.width / 4
                                         color: Light.background
 
                                         Label {
-                                            anchors.centerIn: parent
-                                            text: model.finish
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            anchors.right: parent.right
+                                            text: model.duration
+                                            font.family: String.font
+                                            font.bold: true
+                                            font.pointSize: 12
+                                        }
+                                    }
+
+                                    Rectangle {
+                                        height: taskcard.height
+                                        width: taskcard.width / 12
+                                        color: Light.background
+
+                                        Label {
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            anchors.right: parent.right
+                                            text: model.time
+                                            font.family: String.font
+                                            font.pointSize: 12
                                         }
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    Pane {
+                        id: todayPanel
+                        anchors.top: parent.top
+                        width: parent.width
+                        height: Screen.height / 10
+
+                        Material.elevation: 3
+                        Material.background: Light.background
+
+                        Row {
+                            anchors.fill: parent
+
+                            Rectangle {
+                                width: Screen.width / 5
+                                height: parent.height
+                                color: Light.background
+
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    font.family: String.font
+                                    font.bold: true
+                                    font.pointSize: 20
+                                    text: qsTr(String.today)
+                                }
+                            }
+
                         }
                     }
 
@@ -231,9 +281,6 @@ ApplicationWindow {
                             onClicked: addDialog.open()
                         }
                     }
-
-                    Component.onCompleted: tasksmodel.update()
-
                 }
 
                 Item {
@@ -277,35 +324,179 @@ ApplicationWindow {
                     contentItem: Rectangle {
                         anchors.fill: parent
                         id: dialogRectangle
+                        color: Light.background
 
                         Column {
                             anchors.fill: parent
 
                             Rectangle {
                                 width: dialogRectangle.width
-                                height: dialogRectangle.height * 0.8
+                                height: dialogRectangle.height * 0.2
+                                color: "transparent"
 
-                                Column {
+                                TextField {
+                                    id: name
                                     anchors.centerIn: parent
-
-                                    TextField {
-                                        id: name
-                                        placeholderText: qsTr(String.name)
-                                    }
-
-                                    TextField {
-                                        id: start
-                                        placeholderText: qsTr(String.start)
-                                    }
-
-                                    TextField {
-                                        id: finish
-                                        placeholderText: qsTr(String.finish)
-                                    }
+                                    width: dialogRectangle.width / 3
+                                    placeholderText: qsTr(String.name)
                                 }
                             }
 
                             Rectangle {
+                                width: dialogRectangle.width
+                                height: dialogRectangle.height * 0.6
+                                color: "transparent"
+
+                                Row {
+                                    anchors.fill: parent
+
+                                    Rectangle {
+                                        height: parent.height
+                                        width: parent.width / 2
+                                        color: "transparent"
+
+                                        Column {
+                                            anchors.fill: parent
+
+                                            Rectangle {
+                                                width: parent.width
+                                                height: parent.height / 5
+                                                color: "transparent"
+
+                                                Text {
+                                                    anchors.centerIn: parent
+                                                    font.family: String.font
+                                                    font.pointSize: 16
+                                                    text: qsTr(String.start)
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                width: parent.width
+                                                height: parent.height * 0.8
+                                                color: "transparent"
+
+                                                Row {
+                                                    anchors.centerIn: parent
+
+                                                    Tumbler {
+                                                        id: yearStart
+                                                        currentIndex: time.get_year() - 2020
+                                                        model: getInterval(2020, 2050)
+                                                        onCurrentIndexChanged: {
+                                                            dayStart.model = getInterval(1,
+                                                                            time.get_days_number(yearStart.currentIndex + 2020, monthStart.currentIndex + 1))
+                                                        }
+                                                    }
+
+                                                    Tumbler {
+                                                        id: monthStart
+                                                        currentIndex: time.get_month() - 1
+                                                        model: getInterval(1, 12)
+                                                        onCurrentIndexChanged: {
+                                                            dayStart.model = getInterval(1,
+                                                                            time.get_days_number(yearStart.currentIndex + 2020, monthStart.currentIndex + 1))
+                                                        }
+                                                    }
+
+                                                    Tumbler {
+                                                        id: dayStart
+                                                        currentIndex: time.get_day() - 1
+                                                        model: getInterval(1, time.get_current_days_number())
+                                                    }
+
+                                                    Tumbler {
+                                                        id: hourStart
+                                                        currentIndex: time.get_hour()
+                                                        model: getInterval(0, 23)
+                                                    }
+
+                                                    Tumbler {
+                                                        id: minuteStart
+                                                        currentIndex: 0
+                                                        model: getInterval(0, 59)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    Rectangle {
+                                        height: parent.height
+                                        width: parent.width / 2
+                                        color: "transparent"
+
+                                        Column {
+                                            anchors.fill: parent
+
+                                            Rectangle {
+                                                width: parent.width
+                                                height: parent.height / 5
+                                                color: "transparent"
+
+                                                Text {
+                                                    anchors.centerIn: parent
+                                                    font.family: String.font
+                                                    font.pointSize: 16
+                                                    text: qsTr(String.finish)
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                width: parent.width
+                                                height: parent.height * 0.8
+                                                color: "transparent"
+
+                                                Row {
+                                                    anchors.centerIn: parent
+
+                                                    Tumbler {
+                                                        id: yearFinish
+                                                        currentIndex: time.get_year() - 2020
+                                                        model: getInterval(2020, 2050)
+                                                        onCurrentIndexChanged: {
+                                                            dayFinish.model = getInterval(1,
+                                                                            time.get_days_number(yearFinish.currentIndex + 2020, monthFinish.currentIndex + 1))
+                                                        }
+                                                    }
+
+                                                    Tumbler {
+                                                        id: monthFinish
+                                                        currentIndex: time.get_month() - 1
+                                                        model: getInterval(1, 12)
+                                                        onCurrentIndexChanged: {
+                                                            dayFinish.model = getInterval(1,
+                                                                            time.get_days_number(yearFinish.currentIndex + 2020, monthFinish.currentIndex + 1))
+                                                        }
+                                                    }
+
+                                                    Tumbler {
+                                                        id: dayFinish
+                                                        currentIndex: time.get_day() - 1
+                                                        model: getInterval(1, time.get_current_days_number())
+                                                    }
+
+                                                    Tumbler {
+                                                        id: hourFinish
+                                                        currentIndex: time.get_hour() + 1
+                                                        model: getInterval(0, 23)
+                                                    }
+
+                                                    Tumbler {
+                                                        id: minuteFinish
+                                                        currentIndex: 0
+                                                        model: getInterval(0, 59)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            Rectangle {
+                                color: "transparent"
                                 id: dialogButtonBar
                                 width: dialogRectangle.width
                                 height: dialogRectangle.height * 0.2
@@ -318,16 +509,21 @@ ApplicationWindow {
 
                                     onClicked: {
                                         addDialog.close()
-                                        tasksmodel.add(name.text, start.text, finish.text)
-
+                                        tasksmodel.add(name.text, createDateStirng(yearStart.currentIndex,
+                                                                                    monthStart.currentIndex,
+                                                                                    dayStart.currentIndex,
+                                                                                    hourStart.currentIndex,
+                                                                                    minuteStart.currentIndex),
+                                                                  createDateStirng(yearFinish.currentIndex,
+                                                                                    monthFinish.currentIndex,
+                                                                                    dayFinish.currentIndex,
+                                                                                    hourFinish.currentIndex,
+                                                                                    minuteFinish.currentIndex))
                                     }
                                 }
                             }
                         }
-
-
                     }
-
                 }
             }
         }
@@ -335,6 +531,25 @@ ApplicationWindow {
 
 
     function switchToMainScreen() {
-        stack.push(todayLayout)
+        auth.offline();
+        stack.push(todayLayout);
+    }
+
+    function getInterval(from, to) {
+        var resultList = [];
+        for (var x = from; x <= to; ++x) {
+            resultList.push(x);
+        }
+        return resultList;
+    }
+
+    function createDateStirng(year, month, day, hour, minute) {
+        var yearStr = (year + 2020).toString();
+        var monthStr = (month + 1).toString();
+        var dayStr = (day + 1).toString();
+        var hourStr = hour.toString();
+        var minuteStr = minute.toString();
+
+        return yearStr + "-" + monthStr + "-" + dayStr + " " + hourStr + ":" + minuteStr;
     }
 }

@@ -1,17 +1,14 @@
 from datetime import datetime
+from functools import total_ordering
 
 
-def get_id():
-    """Get unique id for task"""
-    return hash(datetime.now())
-
-
+@total_ordering
 class Task:
     """
     Basic class for task representation
     """
 
-    def __init__(self, name, start, finish, task_id=get_id()):
+    def __init__(self, name, start, finish, task_id=None):
         """
         Constructor with timestamps
         :param name: name of task
@@ -20,7 +17,10 @@ class Task:
         :param task_id: unique identification of task, default -
         hash of current time
         """
-        self.task_id = task_id
+        if task_id is None:
+            self.task_id = self.get_id()
+        else:
+            self.task_id = task_id
         self.name = name
         self.start = start
         self.finish = finish
@@ -29,6 +29,16 @@ class Task:
         return "{task_id : " + str(self.task_id) + ", name : " + self.name + \
                    ", start : " + self.start.isoformat() + ", finish : " + \
                    self.finish.isoformat() + "}"
+
+    def __eq__(self, other):
+        return self.start == other.start
+
+    def __lt__(self, other):
+        return self.start < other.start
+
+    def get_id(self):
+        """Get unique id for task"""
+        return hash(datetime.now())
 
     def get_list(self):
         """
