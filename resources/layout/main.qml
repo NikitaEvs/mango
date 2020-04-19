@@ -184,7 +184,7 @@ ApplicationWindow {
 
                                     Rectangle {
                                         height: taskcard.height
-                                        width: taskcard.width / 3
+                                        width: taskcard.width / 4
                                         color: Light.background
 
                                         Label {
@@ -198,13 +198,13 @@ ApplicationWindow {
 
                                     Rectangle {
                                         height: taskcard.height
-                                        width: taskcard.width / 4
+                                        width: taskcard.width / 3
                                         color: Light.background
                                     }
 
                                     Rectangle {
                                         height: taskcard.height
-                                        width: taskcard.width / 4
+                                        width: taskcard.width / 5
                                         color: Light.background
 
                                         Label {
@@ -219,7 +219,7 @@ ApplicationWindow {
 
                                     Rectangle {
                                         height: taskcard.height
-                                        width: taskcard.width / 12
+                                        width: taskcard.width / 5
                                         color: Light.background
 
                                         Label {
@@ -317,8 +317,8 @@ ApplicationWindow {
 
                 Dialog {
                     id: addDialog
-                    height: applicationWindow.height / 2
-                    width: applicationWindow.width / 2
+                    height: Screen.height / 2
+                    width: Screen.width / 2
                     anchors.centerIn: parent
 
                     contentItem: Rectangle {
