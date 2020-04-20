@@ -4,6 +4,8 @@ import QtQuick 2.12
 QtObject {
     id: singleton
 
+    property string font: "Roboto"
+
     property string signUp: "Sign Up"
     property string signIn: "Sign In"
     property string offline: "Offline mode"
@@ -18,4 +20,5 @@ QtObject {
     property string name: "Name"
     property string start: "Start time"
     property string finish: "Finish time"
+    property string today: "Today"
 }
